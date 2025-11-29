@@ -13,12 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const winnerMessage = document.getElementById('winner-message');
     const mode2P = document.querySelector('[data-mode="2p"]');
     const modeAI = document.querySelector('[data-mode="ai"]');
+    const difficultyContainer = document.getElementById('difficulty-container');
     
     // Game state
     let gameBoard = ['', '', '', '', '', '', '', '', ''];
     let currentPlayer = 'X';
     let gameActive = true;
     let vsAI = false;
+    let aiDifficulty = 'easy'; // easy, medium, hard
     
     // Initialize scores
     let scores = {
@@ -200,30 +202,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // AI move
     const makeAIMove = () => {
-        if (!gameActive) return;
+        if (!vsAI || currentPlayer !== 'O' || !gameActive) return;
+        
+        let moveIndex;
+        const availableMoves = gameBoard
+            .map((cell, index) => cell === '' ? index : null)
+            .filter(val => val !== null);
 
-        // Simple AI: find a winning move or block opponent's winning move
-        let index = getBestMove();
-        if (index === -1) {
-            index = getRandomMove();
+        switch(aiDifficulty) {
+            case 'easy':
+                // Easy: Completely random moves
+                moveIndex = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+                break;
+                
+            case 'medium':
+                // Medium: 50% chance to make a smart move, 50% random
+                if (Math.random() > 0.5) {
+                    moveIndex = getBestMove();
+                } else {
+                    moveIndex = availableMoves[Math.floor(Math.random() * availableMoves.length)];
+                }
+                break;
+                
+            case 'hard':
+                // Hard: Always make the best move
+                moveIndex = getBestMove();
+                break;
+                
+            default:
+                moveIndex = availableMoves[Math.floor(Math.random() * availableMoves.length)];
         }
         
-        if (index !== -1) {
-            makeMove(index);
+        if (moveIndex !== undefined) {
+            setTimeout(() => {
+                makeMove(moveIndex);
+            }, 500); // Add a small delay for better UX
         }
     };
-
+    
     // Get the best move for AI
     const getBestMove = () => {
-        // Check for winning move for AI (O)
+        // Check for winning move
         for (let i = 0; i < gameBoard.length; i++) {
             if (gameBoard[i] === '') {
                 gameBoard[i] = 'O';
-                if (checkWinner()?.winner === 'O') {
-                    gameBoard[i] = '';
+                const winCheck = checkWinner();
+                gameBoard[i] = '';
+                if (winCheck?.winner === 'O') {
                     return i;
                 }
-                gameBoard[i] = '';
             }
         }
         
@@ -231,11 +258,11 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < gameBoard.length; i++) {
             if (gameBoard[i] === '') {
                 gameBoard[i] = 'X';
-                if (checkWinner()?.winner === 'X') {
-                    gameBoard[i] = '';
+                const winCheck = checkWinner();
+                gameBoard[i] = '';
+                if (winCheck?.winner === 'X') {
                     return i;
                 }
-                gameBoard[i] = '';
             }
         }
         
@@ -244,25 +271,53 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Take a corner if available
         const corners = [0, 2, 6, 8];
-        const availableCorners = corners.filter(i => gameBoard[i] === '');
+        const availableCorners = corners.filter(index => gameBoard[index] === '');
         if (availableCorners.length > 0) {
             return availableCorners[Math.floor(Math.random() * availableCorners.length)];
         }
         
-        // Take any available cell
-        return getRandomMove();
+        // Take any available edge
+        const edges = [1, 3, 5, 7];
+        const availableEdges = edges.filter(index => gameBoard[index] === '');
+        if (availableEdges.length > 0) {
+            return availableEdges[Math.floor(Math.random() * availableEdges.length)];
+        }
+        
+        // Fallback to random move (shouldn't happen in a standard game)
+        const availableMoves = gameBoard
+            .map((cell, index) => cell === '' ? index : null)
+            .filter(val => val !== null);
+        return availableMoves[0];
     };
 
+    // Handle mode button clicks
+    const handleModeClick = (e) => {
+        e.preventDefault();
+        const mode = e.currentTarget.getAttribute('data-mode');
+        toggleGameMode(mode);
+    };
+    
+    // Handle difficulty button clicks
+    const handleDifficultyClick = (e) => {
+        e.preventDefault();
+        const buttons = document.querySelectorAll('.difficulty-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        aiDifficulty = e.currentTarget.getAttribute('data-difficulty');
+    };
+    
     // Toggle game mode
     const toggleGameMode = (mode) => {
         vsAI = mode === 'ai';
-        if (mode2P) {
+        if (mode2P && modeAI) {
             if (mode === '2p') {
                 mode2P.classList.add('active');
                 modeAI.classList.remove('active');
+                if (difficultyContainer) difficultyContainer.style.display = 'none';
             } else {
                 mode2P.classList.remove('active');
                 modeAI.classList.add('active');
+                if (difficultyContainer) difficultyContainer.style.display = 'block';
             }
         }
         resetBoard();
@@ -307,29 +362,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize event listeners
     const initEventListeners = () => {
-        // Cell clicks
-        cells.forEach((cell) => {
-            cell.addEventListener('click', handleCellClick);
-        });
-        
-        // Button clicks
-        if (restartBtn) restartBtn.addEventListener('click', resetBoard);
-        if (resetScoresBtn) resetScoresBtn.addEventListener('click', resetScores);
-        if (playAgainBtn) playAgainBtn.addEventListener('click', resetBoard);
-        
-        // Mode buttons
-        if (mode2P) {
-            mode2P.addEventListener('click', (e) => {
-                e.preventDefault();
-                toggleGameMode('2p');
+        try {
+            // Cell clicks
+            cells.forEach((cell) => {
+                cell.removeEventListener('click', handleCellClick);
+                cell.addEventListener('click', handleCellClick);
             });
-        }
-        
-        if (modeAI) {
-            modeAI.addEventListener('click', (e) => {
-                e.preventDefault();
-                toggleGameMode('ai');
+            
+            // Button clicks
+            if (restartBtn) {
+                restartBtn.removeEventListener('click', resetBoard);
+                restartBtn.addEventListener('click', resetBoard);
+            }
+            
+            if (resetScoresBtn) {
+                resetScoresBtn.removeEventListener('click', resetScores);
+                resetScoresBtn.addEventListener('click', resetScores);
+            }
+            
+            if (playAgainBtn) {
+                playAgainBtn.removeEventListener('click', resetBoard);
+                playAgainBtn.addEventListener('click', resetBoard);
+            }
+            
+            // Mode buttons
+            if (mode2P) {
+                mode2P.removeEventListener('click', handleModeClick);
+                mode2P.addEventListener('click', handleModeClick);
+            }
+            
+            if (modeAI) {
+                modeAI.removeEventListener('click', handleModeClick);
+                modeAI.addEventListener('click', handleModeClick);
+            }
+            
+            // Difficulty buttons
+            document.querySelectorAll('.difficulty-btn').forEach(button => {
+                button.removeEventListener('click', handleDifficultyClick);
+                button.addEventListener('click', handleDifficultyClick);
             });
+            
+        } catch (error) {
+            console.error('Error initializing event listeners:', error);
         }
     };
 

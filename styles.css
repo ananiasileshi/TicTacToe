@@ -106,6 +106,42 @@ header h1 {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.difficulty-selector {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.difficulty-options {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.difficulty-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--light);
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+    font-family: 'Game Over', 'Press Start 2P', monospace;
+}
+
+.difficulty-btn.active {
+    background: var(--accent);
+    color: var(--dark);
+    border-color: var(--light);
+    font-weight: bold;
+}
+
+.difficulty-btn:not(.active):hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .scoreboard {
