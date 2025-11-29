@@ -353,6 +353,7 @@ header h1 {
     height: 90vmin;
     max-width: 350px;
     max-height: 350px;
+    aspect-ratio: 1/1;
 }
 
 .cell {
@@ -363,10 +364,13 @@ header h1 {
     justify-content: center;
     font-size: 3.5rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background-color 0.3s ease;
     position: relative;
     overflow: hidden;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    aspect-ratio: 1/1;
+    min-width: 0;
+    min-height: 0;
 }
 
 .cell:hover:not(.x):not(.o) {
@@ -393,7 +397,7 @@ header h1 {
     content: 'X';
     position: absolute;
     font-family: 'Game Over', 'MineCrafter', 'Press Start 2P', monospace;
-    font-size: 3.5rem;
+    font-size: min(12vw, 3.5rem);
     color: var(--accent);
     text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
     width: 100%;
@@ -413,7 +417,7 @@ header h1 {
     content: 'O';
     position: absolute;
     font-family: 'Game Over', 'MineCrafter', 'Press Start 2P', monospace;
-    font-size: 3.5rem;
+    font-size: min(12vw, 3.5rem);
     color: var(--secondary);
     text-shadow: 0 0 10px rgba(255, 192, 30, 0.7);
     width: 100%;
