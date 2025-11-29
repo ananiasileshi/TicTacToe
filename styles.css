@@ -1,0 +1,618 @@
+@font-face {
+    font-family: 'Game Over';
+    src: url('Game Over.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Game Over', 'MineCrafter', 'Press Start 2P', monospace;
+    letter-spacing: 1px;
+}
+
+/* Layout */
+.game-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    gap: 2rem;
+}
+
+.sidebar {
+    width: 200px;
+    padding: 1rem;
+    background: rgba(17, 19, 24, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    align-self: flex-start;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: #000;
+    text-shadow: 
+        -2px -2px 0 #25F4EE,
+        2px 2px 0 #FF2D55;
+    margin: 0;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    display: inline-block;
+}
+
+/* Game Board */
+.game-board-container {
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 1/1;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    width: 100%;
+    height: 100%;
+}
+
+.cell {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.cell:hover:not(.x):not(.o) {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Sidebar Styles */
+.mode-selector {
+    margin-bottom: 2rem;
+}
+
+.mode-selector h3 {
+    color: var(--light);
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.mode-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.scoreboard {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.score {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.score:last-child {
+    border-bottom: none;
+}
+
+.player-x { color: var(--accent); }
+.player-o { color: var(--secondary); }
+
+.current-turn {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+/* Game Controls */
+.game-controls {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.mode-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid transparent;
+    color: var(--light);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    margin: 0.25rem;
+    font-family: 'Game Over', 'Press Start 2P', monospace;
+}
+
+.mode-btn.active {
+    background: var(--accent);
+    color: var(--dark);
+    font-weight: bold;
+    border-color: var(--light);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.mode-btn:not(.active):hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.btn {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Game Over', 'MineCrafter', 'Press Start 2P', monospace;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .game-container {
+        flex-direction: column;
+        padding: 0.5rem;
+    }
+    
+    .sidebar {
+        width: 100%;
+    }
+    
+    .game-board {
+        max-width: 300px;
+    }
+    
+    .game-controls {
+        flex-direction: column;
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+
+:root {
+    --primary: #1a1d23;
+    --secondary: #FFC01E;  /* Yellow for O's */
+    --accent: #00FFFF;     /* Cyan for X's */
+    --dark: #111318;       /* Black */
+    --light: #e0e0e0;      /* Light text */
+    --success: #4caf50;
+    --warning: #FFC01E;
+    --error: #f44336;
+    --cell-bg: rgba(255, 255, 255, 0.05);
+    --cell-hover: rgba(255, 255, 255, 0.08);
+    --modal-bg: rgba(17, 19, 24, 0.98);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    color: var(--light);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    line-height: 1.4;
+    overflow: hidden;
+}
+
+.container {
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    background: rgba(17, 19, 24, 0.9);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+header h1 {
+    font-family: 'Game Over', 'MineCrafter', 'Press Start 2P', monospace;
+    font-size: 2.5rem;
+    margin: 0 0 1rem 0;
+    padding: 0.3rem 1rem;
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    letter-spacing: 1px;
+    color: #000000;
+    text-shadow: 
+        -2px -2px 0 #25F4EE,  /* Cyan shadow top-left */
+        2px 2px 0 #FF2D55;    /* Pink shadow bottom-right */
+    white-space: nowrap;
+}
+
+.game-info {
+    margin-bottom: 2rem;
+}
+
+.scores {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 0.5rem 0;
+    flex-wrap: wrap;
+}
+
+.score {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    min-width: 80px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease;
+}
+
+.score:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.score span:first-child {
+    display: block;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+    font-family: 'Game Over', 'MineCrafter', 'Press Start 2P', monospace;
+}
+
+.score span:last-child {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.player-x {
+    color: var(--accent);
+}
+
+.player-o {
+    color: var(--secondary);
+}
+
+.turn-indicator {
+    font-size: 1.2rem;
+    margin: 1.5rem 0;
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    display: inline-block;
+    min-width: 200px;
+    font-family: 'Game Over', 'MineCrafter', 'Press Start 2P', monospace;
+}
+
+#current-player {
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin-left: 0.5rem;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin: 0.5rem auto;
+    width: 90vmin;
+    height: 90vmin;
+    max-width: 350px;
+    max-height: 350px;
+}
+
+.cell {
+    background: var(--cell-bg);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cell:hover:not(.x):not(.o) {
+    background: var(--cell-hover);
+}
+
+.cell.x {
+    color: var(--accent);
+    cursor: not-allowed;
+    text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+}
+
+.cell.o {
+    color: var(--secondary);
+    cursor: not-allowed;
+    text-shadow: 0 0 10px rgba(255, 192, 30, 0.7);
+}
+
+.cell.x {
+    position: relative;
+}
+
+.cell.x::before {
+    content: 'X';
+    position: absolute;
+    font-family: 'Game Over', 'MineCrafter', 'Press Start 2P', monospace;
+    font-size: 3.5rem;
+    color: var(--accent);
+    text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+    top: 0;
+    left: 0;
+    transform: none;
+}
+
+.cell.o::before {
+    content: 'O';
+    position: absolute;
+    font-family: 'Game Over', 'MineCrafter', 'Press Start 2P', monospace;
+    font-size: 3.5rem;
+    color: var(--secondary);
+    text-shadow: 0 0 10px rgba(255, 192, 30, 0.7);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    top: 0;
+    left: 0;
+}
+
+.cell.winner {
+    animation: pulse 1.5s infinite;
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.7);
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 255, 255, 0.6); }
+    50% { transform: scale(1.05); box-shadow: 0 0 35px rgba(0, 255, 255, 0.9); }
+    100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 255, 255, 0.6); }
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin: 0.5rem 0;
+    width: 100%;
+    max-width: 350px;
+    align-items: center;
+}
+
+button {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: 'Game Over', 'MineCrafter', 'Press Start 2P', monospace;
+    width: 100%;
+    max-width: 200px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn.active {
+    background: var(--accent);
+    color: var(--dark);
+    border: 1px solid rgba(115, 49, 255, 0.3);
+    font-weight: 600;
+}
+
+.game-mode, .difficulty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    visibility: hidden;
+    padding: 1rem;
+}
+
+.modal.show {
+    display: flex;
+    animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: var(--dark);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 400px;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+@keyframes slideIn {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal h2 {
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    color: var(--light);
+}
+
+#play-again-btn {
+    background: var(--accent);
+    color: var(--dark);
+    border: 1px solid rgba(115, 49, 255, 0.3);
+    font-weight: 600;
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+}
+
+footer {
+    margin-top: 2rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+    .game-board {
+        max-width: 300px;
+        gap: 0.8rem;
+    }
+    
+    .cell {
+        font-size: 2.5rem;
+    }
+    
+    header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .score {
+        min-width: 100px;
+        padding: 0.6rem 1rem;
+    }
+    
+    .controls {
+        gap: 0.8rem;
+    }
+    
+    .game-mode, .difficulty {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .modal-content {
+        padding: 1.5rem;
+    }
+    
+    .modal h2 {
+        font-size: 1.5rem;
+    }
+}
+
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background-color: #f00;
+    opacity: 0;
+    z-index: 9999;
+    animation: confetti-fall 3s ease-in-out forwards;
+}
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}

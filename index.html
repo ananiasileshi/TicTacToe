@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            opacity: 1;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            background: rgba(17, 19, 24, 0.85);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe</title>
+    <style>
+        @font-face {
+            font-family: 'MineCrafter';
+            src: url('https://dl.dafont.com/dl/?f=minecrafter') format('woff2'),
+                 url('MineCrafter.woff2') format('woff2'),
+                 url('MineCrafter.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <video autoplay muted loop id="video-background">
+        <source src="background.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+    <div class="game-container">
+        <!-- Left Sidebar - Game Mode -->
+        <div class="sidebar left">
+            <div class="mode-selector">
+                <h3>Mode</h3>
+                <div class="mode-options">
+                    <button class="mode-btn active" data-mode="2p">2 Players</button>
+                    <button class="mode-btn" data-mode="ai">vs AI</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Game Area -->
+        <div class="main-content">
+            <header>
+                <h1>Tic-Tac-Toe</h1>
+            </header>
+
+            <div class="game-board-container">
+                <div class="game-board" id="board">
+                    <div class="cell" data-cell></div>
+                    <div class="cell" data-cell></div>
+                    <div class="cell" data-cell></div>
+                    <div class="cell" data-cell></div>
+                    <div class="cell" data-cell></div>
+                    <div class="cell" data-cell></div>
+                    <div class="cell" data-cell></div>
+                    <div class="cell" data-cell></div>
+                    <div class="cell" data-cell></div>
+                </div>
+            </div>
+
+            <div class="game-controls">
+                <button id="restart-btn" class="btn">Restart Game</button>
+                <button id="reset-scores" class="btn">Reset Scores</button>
+            </div>
+
+            <footer>
+                <p>© 2023 Tic-Tac-Toe. All rights reserved.</p>
+            </footer>
+        </div>
+
+        <!-- Right Sidebar - Scoreboard -->
+        <div class="sidebar right">
+            <div class="scoreboard">
+                <div class="score">
+                    <span class="player-x">Player X</span>
+                    <span id="score-x">0</span>
+                </div>
+                <div class="score">
+                    <span class="player-o">Player O</span>
+                    <span id="score-o">0</span>
+                </div>
+                <div class="score">
+                    <span>Draws</span>
+                    <span id="score-draw">0</span>
+                </div>
+                <div class="current-turn">
+                    <span>Current Turn:</span>
+                    <span id="current-player">X</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2 id="winner-message"></h2>
+            <button id="play-again-btn" class="btn">Play Again</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>Click any cell to place your mark. Get 3 in a row to win!</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
